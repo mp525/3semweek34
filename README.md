@@ -13,4 +13,5 @@
 
 ##Torsdag
 
--Færdiggjordt alle exercises i onsdagsopgaven, 
+-Færdiggjordt alle exercises i torsdagsopgaven, exercise 0 findes i som jpql_demo_for_day4 i torsdag folder, resten af exercises findes som week1simplejparest3 i torsdag folder
+-En test på createEmployee blev ikke færdiggjort
