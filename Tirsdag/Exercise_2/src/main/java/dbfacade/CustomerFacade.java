@@ -10,6 +10,7 @@ import java.util.List;
 import javax.persistence.EntityManager;
 import javax.persistence.EntityManagerFactory;
 import javax.persistence.Persistence;
+import javax.persistence.Query;
 import javax.persistence.TypedQuery;
 
 /**
@@ -27,8 +28,8 @@ public class CustomerFacade {
     public static void main(String[] args) {
          emf = Persistence.createEntityManagerFactory("pu");
          CustomerFacade facade = CustomerFacade.getCustomerFacade(emf);
-         Customer c1 = facade.addCustomer("bigboy", "mcgee");
-         Customer c2 = facade.addCustomer("sans", "sans");
+         Customer c1 = new Customer("bigboy", "mcgee");
+         Customer c2 = new Customer("sans", "sans");
          
          System.out.println(facade.findById(1).toString());
          System.out.println(facade.findByLastName("mcgee"));
@@ -89,17 +90,32 @@ public class CustomerFacade {
         
     }
     
-    public Customer addCustomer(String firstName, String lastName){
-        Customer cus = new Customer(firstName, lastName);
+    public Customer addCustomer(Customer customer){
+        
         EntityManager em = emf.createEntityManager();
         try{
             em.getTransaction().begin();
-            em.persist(cus);
+            em.persist(customer);
             em.getTransaction().commit();
-            return cus;
+            return customer;
         }finally {
             em.close();
         }
+    }
+    
+    public void removeCustomer(String firstName){
+        
+         EntityManager em = emf.createEntityManager();
+        try{
+            em.getTransaction().begin();
+             int query = 
+                       em.createQuery("Delete FROM Customer where firstName = '" + firstName +"'").executeUpdate();
+            em.getTransaction().commit();
+            
+        }finally {
+            em.close();
+        }
+        
     }
 }
 

@@ -8,6 +8,7 @@ package dbfacade;
 import Entities.Customer;
 import java.util.List;
 import javax.persistence.EntityManagerFactory;
+import javax.persistence.Persistence;
 import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.AfterAll;
 import org.junit.jupiter.api.BeforeEach;
@@ -21,139 +22,102 @@ import static org.junit.jupiter.api.Assertions.*;
  */
 public class CustomerFacadeTest {
     
+    private static EntityManagerFactory emf = Persistence.createEntityManagerFactory("pu");
+    private static CustomerFacade cf = CustomerFacade.getCustomerFacade(emf);
+    
     public CustomerFacadeTest() {
     }
 
-    @org.junit.jupiter.api.BeforeAll
+    @BeforeAll
     public static void setUpClass() throws Exception {
     }
 
-    @org.junit.jupiter.api.AfterAll
+    @AfterAll
     public static void tearDownClass() throws Exception {
     }
 
-    @org.junit.jupiter.api.BeforeEach
-    public void setUp() throws Exception {
-    }
-
-    @org.junit.jupiter.api.AfterEach
-    public void tearDown() throws Exception {
-    }
-    
-    /*@BeforeAll
-    public static void setUpClass() {
-    }
-    
-    @AfterAll
-    public static void tearDownClass() {
-    }
-    
     @BeforeEach
-    public void setUp() {
+    public void setUp() throws Exception {
+        
+    }
+
+    @AfterEach
+    public void tearDown() throws Exception {
+        
     }
     
-    @AfterEach
-    public void tearDown() {
-    }*/
-
-    /**
-     * Test of main method, of class CustomerFacade.
-     */
-    @org.junit.jupiter.api.Test
-    public void testMain() {
-        System.out.println("main");
-        String[] args = null;
-        CustomerFacade.main(args);
-        // TODO review the generated test code and remove the default call to fail.
-        fail("The test case is a prototype.");
-    }
-
-    /**
-     * Test of getCustomerFacade method, of class CustomerFacade.
-     */
-    @org.junit.jupiter.api.Test
-    public void testGetCustomerFacade() {
-        System.out.println("getCustomerFacade");
-        EntityManagerFactory _emf = null;
-        CustomerFacade expResult = null;
-        CustomerFacade result = CustomerFacade.getCustomerFacade(_emf);
-        assertEquals(expResult, result);
-        // TODO review the generated test code and remove the default call to fail.
-        fail("The test case is a prototype.");
-    }
 
     /**
      * Test of findById method, of class CustomerFacade.
      */
-    @org.junit.jupiter.api.Test
+    @Test
     public void testFindById() {
-        System.out.println("findById");
-        long id = 0L;
-        CustomerFacade instance = null;
-        Customer expResult = null;
-        Customer result = instance.findById(id);
-        assertEquals(expResult, result);
-        // TODO review the generated test code and remove the default call to fail.
-        fail("The test case is a prototype.");
+        Customer customer = cf.findById(1);
+        String exp = "Kobe";
+        assertEquals(exp,customer.getFirstName());
     }
 
     /**
      * Test of findByLastName method, of class CustomerFacade.
      */
-    @org.junit.jupiter.api.Test
+    @Test
     public void testFindByLastName() {
-        System.out.println("findByLastName");
-        String name = "";
-        CustomerFacade instance = null;
-        List<Customer> expResult = null;
-        List<Customer> result = instance.findByLastName(name);
-        assertEquals(expResult, result);
-        // TODO review the generated test code and remove the default call to fail.
-        fail("The test case is a prototype.");
+        Customer customer = new Customer("test", "test");
+        cf.addCustomer(customer);
+        String lastName = "test";
+        List<Customer> resultList = cf.findByLastName(lastName);
+        Customer result = null;
+        for (Customer c : resultList) {
+            if(c.equals(customer)){
+                result = customer;
+            }
+        }
+        cf.removeCustomer("test");
+        assertEquals(lastName, result.getLastName());
+        
     }
 
     /**
      * Test of getNumberOfCustomers method, of class CustomerFacade.
      */
-    @org.junit.jupiter.api.Test
+    @Test
     public void testGetNumberOfCustomers() {
-        System.out.println("getNumberOfCustomers");
-        CustomerFacade instance = null;
-        Long expResult = null;
-        Long result = instance.getNumberOfCustomers();
-        assertEquals(expResult, result);
-        // TODO review the generated test code and remove the default call to fail.
-        fail("The test case is a prototype.");
+        Long result = cf.getNumberOfCustomers();
+        Long exp = 5L;
+        assertEquals(exp, result);
     }
 
     /**
      * Test of allCustomers method, of class CustomerFacade.
      */
-    @org.junit.jupiter.api.Test
+    @Test
     public void testAllCustomers() {
-        System.out.println("allCustomers");
-        CustomerFacade instance = null;
-        List<Customer> expResult = null;
-        List<Customer> result = instance.allCustomers();
-        assertEquals(expResult, result);
-        // TODO review the generated test code and remove the default call to fail.
-        fail("The test case is a prototype.");
+        List<Customer> testList = cf.allCustomers();
+       int result = testList.size();
+       int exp = 5;
+       assertEquals(exp, result);
     }
 
     /**
      * Test of addCustomer method, of class CustomerFacade.
      */
-    @org.junit.jupiter.api.Test
+    @Test
     public void testAddCustomer() {
-        System.out.println("addCustomer");
-        String firstName = "";
-        String lastName = "";
-        CustomerFacade instance = null;
-        Customer expResult = null;
-        Customer result = instance.addCustomer(firstName, lastName);
-        assertEquals(expResult, result);
-        // TODO review the generated test code and remove the default call to fail.
-        fail("The test case is a prototype.");
+        Customer customer = new Customer("testadd", "testadd");
+        Customer result = cf.addCustomer(customer);
+        cf.removeCustomer("testadd");
+        assertTrue(result != null);
+//        String lastName = "testadd";
+//        List<Customer> resultList = cf.allCustomers();
+//        Customer result = null;
+//        for (Customer c : resultList) {
+//            if(c.equals(customer)){
+//                result = customer;
+//            }
+//        }
+//        cf.removeCustomer("testadd");
+//        assertEquals(customer, result);
+        
     }
     
 }
